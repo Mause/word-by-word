@@ -9,7 +9,7 @@ class Word(object):
         Get the first word for a story
         """
         c = connection.cursor()
-        c.execute("SELECT wordID, storyID, word, author, parentID FROM words WHERE storyID = ? and parentID IS NULL", (story_id,))
+        c.execute("SELECT * FROM words WHERE storyID = ? and parentID IS NULL", (story_id,))
         result = c.fetchone()
         if result:
             return cla(*result)
@@ -17,9 +17,7 @@ class Word(object):
     @classmethod
     def from_id(cla, word_id):
         c = connection.cursor()
-        c.execute("""SELECT wordID, storyID, word, author, parentID
-                    FROM words
-                    WHERE wordID = ?""", (word_id,))
+        c.execute("SELECT * FROM words WHERE wordID = ?", (word_id,))
         result = c.fetchone()
         if result:
             return cla(*result)
@@ -54,9 +52,7 @@ class Word(object):
             child.remove()
 
         c = connection.cursor()
-        c.execute("""
-        DELETE FROM words WHERE wordID = ?
-        """, (self.id,))
+        c.execute("DELETE FROM words WHERE wordID=?", (self.id,))
         connection.commit()
 
     @property
